@@ -1,0 +1,6 @@
+grue:
+. whenever exiting zone editor, have current map editor focus on editing zone layer with the last-selected zone as current
+
+zero:
+. sequential backup whenever saving
+. pro level shit: make entities show up.
