@@ -1,6 +1,20 @@
 grue:
 . whenever exiting zone editor, have current map editor focus on editing zone layer with the last-selected zone as current
+. paradise nuevo animations arent anim-previewed correctly
+. fix order of layers
+. automagic entity activation script generation
 
 zero:
 . sequential backup whenever saving
+. json
+. guide layer (target rez size) [possibly done as a screen aligned thing]
+. consider: EZ px size measurer
 . pro level shit: make entities show up.
+
+
+ongoing:
+. documentation/cheatsheet
+. things layer
+. preview panel w/ parallax (low priority for zero)
+. renderstring elimination
+. things other than notes on the notes layer (e..g. primitives)
