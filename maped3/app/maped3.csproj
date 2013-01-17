@@ -101,6 +101,10 @@
       <Name>MRU</Name>
       <HintPath>..\components\MRU.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\components\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="RegisterFileType">
       <Name>RegisterFileType</Name>
       <HintPath>..\components\RegisterFileType.dll</HintPath>
@@ -140,6 +144,7 @@
     <Compile Include="code\InputOutput.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="code\InputOutputJson.cs" />
     <Compile Include="code\Map.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -289,6 +294,7 @@
     <Compile Include="pr2\LockedBitmap.cs" />
     <Compile Include="pr2\Render.cs" />
     <Compile Include="pr2\RenderImage.cs" />
+    <Content Include="wishlist.txt" />
     <EmbeddedResource Include="controls\ColorPicker.resx">
       <DependentUpon>ColorPicker.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -446,9 +452,6 @@
   <ItemGroup>
     <Folder Include="Properties\" />
     <Folder Include="resources\cursors\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

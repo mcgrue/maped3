@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -56,7 +57,7 @@ namespace winmaped2
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.GroupBox g_wanderzone;
-		ArrayList entCopy = new ArrayList();
+		List<MapEntity> entCopy = new List<MapEntity>();
 		private System.Windows.Forms.Label l_wzone;
 		private System.Windows.Forms.Label label13;
 		private System.Windows.Forms.OpenFileDialog openFileDialog;
@@ -77,7 +78,7 @@ namespace winmaped2
 		private Button b_dupeent;
 		Map map;
 
-		public ArrayList EditedEntities { get { return entCopy; } }
+		public List<MapEntity> EditedEntities { get { return entCopy; } }
 
 
 		public EntityEditWnd()
@@ -93,7 +94,7 @@ namespace winmaped2
 		}
 		public void init(Map map)
 		{
-			ArrayList ents = map.Entities;
+			var ents = map.Entities;
 			this.map = map;
 			foreach (MapEntity me in ents)
 				entCopy.Add(me.Clone());

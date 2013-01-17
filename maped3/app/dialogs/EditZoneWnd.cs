@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -42,9 +43,9 @@ namespace winmaped2
 		private System.Windows.Forms.MenuItem menuItem3;
 		private System.Windows.Forms.ContextMenu cm_ents;
 
-		ArrayList zoneCopy = new ArrayList();
+		List<MapZone> zoneCopy = new List<MapZone>();
 
-		public ArrayList AlteredZones { get { return zoneCopy; } }
+		public List<MapZone> AlteredZones { get { return zoneCopy; } }
 		public MapLayer AlteredZoneLayer { get { return zoneLayerCopy; } }
 		Map map;
 		private Button b_dupzone;
@@ -65,7 +66,7 @@ namespace winmaped2
 			InitializeComponent();
 
 		}
-		public void init(Map m, ArrayList zones)
+		public void init(Map m, List<MapZone> zones)
 		{
 			map = m;
 			zoneLayerCopy = m.ZoneLayer.copy();
