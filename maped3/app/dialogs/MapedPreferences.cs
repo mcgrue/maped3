@@ -38,6 +38,8 @@ namespace winmaped2
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 		private System.Windows.Forms.Panel p_autosaveoptions;
+		private TabPage tabPage3;
+		private CheckBox cb_astral;
 
 		string[] zoomlevels = new string[] { "1x","2x","3x","4x" };
 
@@ -54,6 +56,7 @@ namespace winmaped2
 
 			cb_zoomlevel.Text = zoomlevels[Preferences.Current.DefaultZoomLevel-1];
 			cb_autosave.Checked = Preferences.Current.AutoSave;
+			cb_astral.Checked = Preferences.Current.Astral;
 			n_asint.Value = Preferences.Current.AutoSaveDelay;
 			n_asbackups.Value = Preferences.Current.AutoSaveLimit;
 			p_obs.BackColor = Color.FromArgb(Preferences.Current.ObsColor);
@@ -91,12 +94,13 @@ namespace winmaped2
 			this.cb_zoomlevel = new System.Windows.Forms.ComboBox();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.cb_autosave = new System.Windows.Forms.CheckBox();
+			this.p_autosaveoptions = new System.Windows.Forms.Panel();
+			this.n_asbackups = new System.Windows.Forms.NumericUpDown();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.n_asint = new System.Windows.Forms.NumericUpDown();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
-			this.n_asbackups = new System.Windows.Forms.NumericUpDown();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -107,15 +111,17 @@ namespace winmaped2
 			this.p_zones = new System.Windows.Forms.Panel();
 			this.p_ents = new System.Windows.Forms.Panel();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.p_autosaveoptions = new System.Windows.Forms.Panel();
+			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.cb_astral = new System.Windows.Forms.CheckBox();
 			this.groupBox2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.n_asint)).BeginInit();
+			this.p_autosaveoptions.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.n_asbackups)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.n_asint)).BeginInit();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
-			this.p_autosaveoptions.SuspendLayout();
+			this.tabPage3.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// b_ok
@@ -149,10 +155,10 @@ namespace winmaped2
 			// 
 			this.cb_zoomlevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cb_zoomlevel.Items.AddRange(new object[] {
-															  "1x",
-															  "2x",
-															  "3x",
-															  "4x"});
+            "1x",
+            "2x",
+            "3x",
+            "4x"});
 			this.cb_zoomlevel.Location = new System.Drawing.Point(168, 8);
 			this.cb_zoomlevel.Name = "cb_zoomlevel";
 			this.cb_zoomlevel.Size = new System.Drawing.Size(121, 21);
@@ -177,6 +183,26 @@ namespace winmaped2
 			this.cb_autosave.TabIndex = 4;
 			this.cb_autosave.Text = "Auto-Backup Enabled";
 			this.cb_autosave.CheckedChanged += new System.EventHandler(this.cb_autosave_CheckedChanged);
+			// 
+			// p_autosaveoptions
+			// 
+			this.p_autosaveoptions.Controls.Add(this.n_asbackups);
+			this.p_autosaveoptions.Controls.Add(this.label5);
+			this.p_autosaveoptions.Controls.Add(this.label4);
+			this.p_autosaveoptions.Controls.Add(this.n_asint);
+			this.p_autosaveoptions.Controls.Add(this.label2);
+			this.p_autosaveoptions.Controls.Add(this.label3);
+			this.p_autosaveoptions.Location = new System.Drawing.Point(8, 32);
+			this.p_autosaveoptions.Name = "p_autosaveoptions";
+			this.p_autosaveoptions.Size = new System.Drawing.Size(336, 56);
+			this.p_autosaveoptions.TabIndex = 5;
+			// 
+			// n_asbackups
+			// 
+			this.n_asbackups.Location = new System.Drawing.Point(160, 32);
+			this.n_asbackups.Name = "n_asbackups";
+			this.n_asbackups.Size = new System.Drawing.Size(56, 20);
+			this.n_asbackups.TabIndex = 1;
 			// 
 			// label5
 			// 
@@ -219,17 +245,11 @@ namespace winmaped2
 			this.label3.Text = "Maximum Backups";
 			this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// n_asbackups
-			// 
-			this.n_asbackups.Location = new System.Drawing.Point(160, 32);
-			this.n_asbackups.Name = "n_asbackups";
-			this.n_asbackups.Size = new System.Drawing.Size(56, 20);
-			this.n_asbackups.TabIndex = 1;
-			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Location = new System.Drawing.Point(8, 8);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -302,7 +322,7 @@ namespace winmaped2
 			// 
 			// p_zones
 			// 
-			this.p_zones.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(0)), ((System.Byte)(0)), ((System.Byte)(192)));
+			this.p_zones.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
 			this.p_zones.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.p_zones.Location = new System.Drawing.Point(128, 40);
 			this.p_zones.Name = "p_zones";
@@ -329,18 +349,24 @@ namespace winmaped2
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "   Auto-Backup   ";
 			// 
-			// p_autosaveoptions
+			// tabPage3
 			// 
-			this.p_autosaveoptions.Controls.Add(this.n_asbackups);
-			this.p_autosaveoptions.Controls.Add(this.label5);
-			this.p_autosaveoptions.Controls.Add(this.label4);
-			this.p_autosaveoptions.Controls.Add(this.n_asint);
-			this.p_autosaveoptions.Controls.Add(this.label2);
-			this.p_autosaveoptions.Controls.Add(this.label3);
-			this.p_autosaveoptions.Location = new System.Drawing.Point(8, 32);
-			this.p_autosaveoptions.Name = "p_autosaveoptions";
-			this.p_autosaveoptions.Size = new System.Drawing.Size(336, 56);
-			this.p_autosaveoptions.TabIndex = 5;
+			this.tabPage3.Controls.Add(this.cb_astral);
+			this.tabPage3.Location = new System.Drawing.Point(4, 22);
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage3.Size = new System.Drawing.Size(384, 150);
+			this.tabPage3.TabIndex = 2;
+			this.tabPage3.Text = "Game Hacks";
+			this.tabPage3.UseVisualStyleBackColor = true;
+			// 
+			// cb_astral
+			// 
+			this.cb_astral.Location = new System.Drawing.Point(15, 6);
+			this.cb_astral.Name = "cb_astral";
+			this.cb_astral.Size = new System.Drawing.Size(144, 16);
+			this.cb_astral.TabIndex = 5;
+			this.cb_astral.Text = "Astral";
 			// 
 			// MapedPreferences
 			// 
@@ -359,13 +385,14 @@ namespace winmaped2
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "MapedPreferences";
 			this.groupBox2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.n_asint)).EndInit();
+			this.p_autosaveoptions.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.n_asbackups)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.n_asint)).EndInit();
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
-			this.p_autosaveoptions.ResumeLayout(false);
+			this.tabPage3.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -377,6 +404,7 @@ namespace winmaped2
 				p_autosaveoptions.Enabled=true;
 			else p_autosaveoptions.Enabled=false;
 		}
+
 
 		private void p_obs_Click(object sender, System.EventArgs e)
 		{
@@ -413,6 +441,7 @@ namespace winmaped2
 
 			Preferences.Current.DefaultZoomLevel = cb_zoomlevel.SelectedIndex + 1;
 			Preferences.Current.ObsColor = p_obs.BackColor.ToArgb();
+			Preferences.Current.Astral = cb_astral.Checked;
 			Preferences.Current.ZonesColor = p_zones.BackColor.ToArgb();
 			Preferences.Current.EntsColor = p_ents.BackColor.ToArgb();
 			Preferences.Current.AutoSave = cb_autosave.Checked;
@@ -422,6 +451,7 @@ namespace winmaped2
 			DialogResult = DialogResult.OK;
 			Close();
 		}
+
 		
 	}
 }

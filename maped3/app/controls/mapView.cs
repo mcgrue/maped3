@@ -130,7 +130,10 @@ namespace winmaped2
 						tile = tileMap[tp++];
 						if (0 < tile && tile < ParentMap.vsp.ObstructionTiles.Count)
 						{
-							Render.renderObsTile(backBuffer, cpx, cpy, ((VspObstructionTile)ParentMap.vsp.ObstructionTiles[tile]).Image, false, Preferences.Current.ObsColor);
+							int c = Preferences.Current.ObsColor;
+							if(Preferences.Current.Astral)
+								if(tile != 15) c = Color.Red.ToArgb();
+							Render.renderObsTile(backBuffer, cpx, cpy, ((VspObstructionTile)ParentMap.vsp.ObstructionTiles[tile]).Image, false, c);
 						}
 					}
 				}
