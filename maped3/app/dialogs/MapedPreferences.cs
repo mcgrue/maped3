@@ -439,14 +439,22 @@ namespace winmaped2
 		{
 			// save prefs
 
+			bool reboot = false;
+
 			Preferences.Current.DefaultZoomLevel = cb_zoomlevel.SelectedIndex + 1;
 			Preferences.Current.ObsColor = p_obs.BackColor.ToArgb();
+			reboot = (Preferences.Current.Astral != cb_astral.Checked);
 			Preferences.Current.Astral = cb_astral.Checked;
 			Preferences.Current.ZonesColor = p_zones.BackColor.ToArgb();
 			Preferences.Current.EntsColor = p_ents.BackColor.ToArgb();
 			Preferences.Current.AutoSave = cb_autosave.Checked;
 			Preferences.Current.AutoSaveDelay = (int)n_asint.Value;
 			Preferences.Current.AutoSaveLimit = (int)n_asbackups.Value;
+
+			if (reboot)
+			{
+				MessageBox.Show("You might need to restart maped now for somechanges to take effect. Its for the best.");
+			}
 
 			DialogResult = DialogResult.OK;
 			Close();

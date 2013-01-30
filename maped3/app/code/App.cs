@@ -9,6 +9,8 @@ namespace winmaped2 {
         [STAThread]
         public static int Main(string[] args) {
 
+						Preferences.LoadAsCurrent();
+
             MainWindow mw = new MainWindow();
 
             if (args.Length > 0) {

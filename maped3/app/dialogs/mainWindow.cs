@@ -171,8 +171,6 @@ namespace winmaped2
 
 			Global.FrameCalc.init();
 
-			Preferences.LoadAsCurrent();
-
 			Plugins.IMapPlugin brush, rectfill, line, rectangle, floodfill, clipboard, noteTool;
 			Global.pluginManager.addPlugin(brush = new winmaped2.map_plugins.BrushTool());
 			Global.pluginManager.addPlugin(rectfill = new winmaped2.map_plugins.RectFill());
