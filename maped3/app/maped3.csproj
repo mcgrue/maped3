@@ -466,7 +466,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>if %25USERDOMAIN%25 == hell copy /y maped3.exe ..\..\..\..\rk\astral\trunk\tools\maped3
-if %25USERDOMAIN%25 == hell copy /y *.dll ..\..\..\..\rk\astral\trunk\tools\maped3</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
