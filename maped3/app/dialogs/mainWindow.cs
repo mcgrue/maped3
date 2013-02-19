@@ -2786,100 +2786,128 @@ namespace winmaped2
 		{
 		}
 
-		private unsafe void ImportTiles(bool repeat) {
-            Vsp24 v = Global.ActiveMap.vsp;
-            Vsp24 vsp = null;
-            Bitmap bmp = null;
+		private unsafe void ImportTiles(bool repeat)
+		{
+			Vsp24 v = Global.ActiveMap.vsp;
+			Vsp24 vsp = null;
+			Bitmap bmp = null;
 
-            int ic = 0;
-            if (id.ISource == ImportSource.VSP) {
-                if (!repeat)
-                    if (openVspDialog.ShowDialog() != DialogResult.OK) return;
-                vsp = InputOutput.ReadVsp(openVspDialog.FileName);
-                if (vsp == null) {
-                    Errors.Error("unable to load vsp");
-                    return;
-                }
-            } else if (id.ISource == ImportSource.Image) {
-                if (!repeat)
-                    if (openImageDialog.ShowDialog() != DialogResult.OK) return;
-								using (var tempbmp = new Bitmap(openImageDialog.FileName))
-									bmp = (Bitmap)tempbmp.Clone();
-            } else if (id.ISource == ImportSource.Clipboard) {
-                if (!WindowsClipboard.IsImage) {
-                    Errors.Error("There is no image in the clipboard.");
-                    return;
-                }
-                bmp = WindowsClipboard.getBitmap();
-            }
+			int ic = 0;
+			if (id.ISource == ImportSource.VSP)
+			{
+				if (!repeat)
+					if (openVspDialog.ShowDialog() != DialogResult.OK) return;
+				vsp = InputOutput.ReadVsp(openVspDialog.FileName);
+				if (vsp == null)
+				{
+					Errors.Error("unable to load vsp");
+					return;
+				}
+			}
+			else if (id.ISource == ImportSource.Image)
+			{
+				if (!repeat)
+					if (openImageDialog.ShowDialog() != DialogResult.OK) return;
+				using (var tempbmp = new Bitmap(openImageDialog.FileName))
+					bmp = (Bitmap)tempbmp.Clone();
+			}
+			else if (id.ISource == ImportSource.Clipboard)
+			{
+				if (!WindowsClipboard.IsImage)
+				{
+					Errors.Error("There is no image in the clipboard.");
+					return;
+				}
+				bmp = WindowsClipboard.getBitmap();
+			}
 
-            ArrayList tiles = new ArrayList();
-            if (id.IDest == ImportDest.Tiles) {
-                int tstart = 0;
-                if (id.ISource == ImportSource.Image || id.ISource == ImportSource.Clipboard) {
-                    tiles = v.ImportTiles(bmp, id.bPadding ? 1 : 0);
-                } else {
-                    tiles = v.GetTiles(vsp);
-                }
-                if (id.IMethod == ImportMethod.Append) {
-                    tstart = v.Tiles.Count;
-                    v.Tiles.AddRange(tiles);
-                } else if (id.IMethod == ImportMethod.Insert) {
-                    tstart = id.InsertAt >= tiles.Count ? tiles.Count - 1 : id.InsertAt;
-                    v.Tiles.InsertRange(tstart, tiles);
-                } else if (id.IMethod == ImportMethod.Replace) {
-                    if (MessageBox.Show("Warning, the current tiles will be wiped and replaced with imported tiles!", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning)
-                            == DialogResult.Cancel) return;
-                    v.Tiles.Clear();
-                    v.Tiles.AddRange(tiles);
-                    vspController.ResetView();
-                    tstart = 0;
-                }
-                if (id.bAddLayer && (id.ISource == ImportSource.Image || id.ISource == ImportSource.Clipboard)) {
-									int tw = bmp.Width / Global.TILE_SIZE;
-									int th = bmp.Height / Global.TILE_SIZE;
+			ArrayList tiles = new ArrayList();
+			if (id.IDest == ImportDest.Tiles)
+			{
+				int tstart = 0;
+				if (id.ISource == ImportSource.Image || id.ISource == ImportSource.Clipboard)
+				{
+					tiles = v.ImportTiles(bmp, id.bPadding ? 1 : 0);
+				}
+				else
+				{
+					tiles = v.GetTiles(vsp);
+				}
+				if (id.IMethod == ImportMethod.Append)
+				{
+					tstart = v.Tiles.Count;
+					v.Tiles.AddRange(tiles);
+				}
+				else if (id.IMethod == ImportMethod.Insert)
+				{
+					tstart = id.InsertAt >= tiles.Count ? tiles.Count - 1 : id.InsertAt;
+					v.Tiles.InsertRange(tstart, tiles);
+				}
+				else if (id.IMethod == ImportMethod.Replace)
+				{
+					if (MessageBox.Show("Warning, the current tiles will be wiped and replaced with imported tiles!", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning)
+                            == DialogResult.Cancel) goto ABORT;
+					v.Tiles.Clear();
+					v.Tiles.AddRange(tiles);
+					vspController.ResetView();
+					tstart = 0;
+				}
+				if (id.bAddLayer && (id.ISource == ImportSource.Image || id.ISource == ImportSource.Clipboard))
+				{
+					int tw = bmp.Width / Global.TILE_SIZE;
+					int th = bmp.Height / Global.TILE_SIZE;
 
-                    MapLayer mlz = new MapLayer(Global.ActiveMap);
-                    mlz.type = LayerType.Tile;
-                    mlz.size(tw, th);
-                    mlz.name = "Imported Layer "; //"Layer " + (Global.ActiveMap.Layers.Count - 3);
-                    mlz.parallaxInfo = new ParallaxInfo();
-                    for (int ty = 0; ty < th; ty++) {
-                        for (int tx = 0; tx < tw; tx++) {
-                            mlz.Data[ty * tw + tx] = (short)(tstart + ((ty * tw) + tx));
-                        }
-                    }
-                    Global.ActiveMap.AddLayer(mlz);
-                    lpUpdate(Global.ActiveMap, mlz);
-                }
-            } else if (id.IDest == ImportDest.Obs) {
-                if (id.ISource == ImportSource.Image || id.ISource == ImportSource.Clipboard)
-                    tiles = v.ImportObstructionTiles(bmp, id.bPadding ? 1 : 0);
-                else
-                    tiles = v.ImportObstructionTiles(vsp);
-                if (id.IMethod == ImportMethod.Append)
-                    v.ObstructionTiles.AddRange(tiles);
-                else if (id.IMethod == ImportMethod.Insert) {
-                    v.ObstructionTiles.InsertRange(id.InsertAt >= tiles.Count ? tiles.Count - 1 : id.InsertAt, tiles);
-                } else if (id.IMethod == ImportMethod.Replace) {
-                    if (MessageBox.Show("Warning, the current obstruction tiles will be wiped and replaced with imported tiles!", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning)
-                            == DialogResult.Cancel) return;
-                    v.ObstructionTiles.Clear();
-                    v.ObstructionTiles.AddRange(tiles);
-                    vspc_obs.ResetView();
-                }
-            }
+					MapLayer mlz = new MapLayer(Global.ActiveMap);
+					mlz.type = LayerType.Tile;
+					mlz.size(tw, th);
+					mlz.name = "Imported Layer "; //"Layer " + (Global.ActiveMap.Layers.Count - 3);
+					mlz.parallaxInfo = new ParallaxInfo();
+					for (int ty = 0; ty < th; ty++)
+					{
+						for (int tx = 0; tx < tw; tx++)
+						{
+							mlz.Data[ty * tw + tx] = (short)(tstart + ((ty * tw) + tx));
+						}
+					}
+					Global.ActiveMap.AddLayer(mlz);
+					lpUpdate(Global.ActiveMap, mlz);
+				}
+			}
+			else if (id.IDest == ImportDest.Obs)
+			{
+				if (id.ISource == ImportSource.Image || id.ISource == ImportSource.Clipboard)
+					tiles = v.ImportObstructionTiles(bmp, id.bPadding ? 1 : 0);
+				else
+					tiles = v.ImportObstructionTiles(vsp);
+				if (id.IMethod == ImportMethod.Append)
+					v.ObstructionTiles.AddRange(tiles);
+				else if (id.IMethod == ImportMethod.Insert)
+				{
+					v.ObstructionTiles.InsertRange(id.InsertAt >= tiles.Count ? tiles.Count - 1 : id.InsertAt, tiles);
+				}
+				else if (id.IMethod == ImportMethod.Replace)
+				{
+					if (MessageBox.Show("Warning, the current obstruction tiles will be wiped and replaced with imported tiles!", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning)
+							== DialogResult.Cancel) goto ABORT;
+					v.ObstructionTiles.Clear();
+					v.ObstructionTiles.AddRange(tiles);
+					vspc_obs.ResetView();
+				}
+			}
 
 
 
-            ic = tiles.Count;
+			ic = tiles.Count;
 
-            statusBar.Panels[0].Text = ic.ToString() + " tiles imported to VSP";
+			statusBar.Panels[0].Text = ic.ToString() + " tiles imported to VSP";
 
-            miImportAgain.Enabled = true;
+			miImportAgain.Enabled = true;
 
-            ui_update();
+			ui_update();
 
+           ABORT:
+            if(bmp != null)
+                bmp.Dispose();
         }
 		ImportDialog id = new ImportDialog();
 		private void miImport_Click(object sender, System.EventArgs e)
