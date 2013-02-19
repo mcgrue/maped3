@@ -73,6 +73,7 @@ namespace winmaped2 {
 
         public class FrameCalc {
             static System.Timers.Timer timer;
+						static System.Threading.Timer ttimer;
             static int ticks = 0;
             static Hashtable lookup = new Hashtable();
             public static event SimpleEventHandler OnTick;
@@ -86,7 +87,10 @@ namespace winmaped2 {
                 }
             }
             public static void init() {
-                timer = new System.Timers.Timer(10);
+                double msInterval = 1000/100.0;
+                if (Preferences.Current.Astral)
+                  msInterval = 1000 / 1000;
+                timer = new System.Timers.Timer(msInterval);
                 timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed);
                 timer.Start();
             }

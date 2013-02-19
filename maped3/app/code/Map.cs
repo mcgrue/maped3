@@ -54,6 +54,7 @@ namespace winmaped2
 
 		public int ID = 0;
 
+		[Newtonsoft.Json.JsonIgnore]
 		public Map parentmap;
 		public string RenderStringComponent
 		{
@@ -180,7 +181,7 @@ namespace winmaped2
 
 		public int Rate;
 		public int Delay;
-		public int Flags = 1 << 1; //default to down
+		public int Flags = 1 << 1; //(spawnpoint facing: default to down)
 		public int Facing { get { return (Flags >> 1) & 3; } set { Flags = (Flags & ~6) | (value<<1); } }
 
 		public string PlayerScript = "";
@@ -301,6 +302,7 @@ namespace winmaped2
 
 		public int ID;
 
+		[Newtonsoft.Json.JsonIgnore]
 		public MapChr Chr; // only exists if we've loaded image data
 		public string ChrName = "";
 		public override string ToString()
@@ -529,16 +531,14 @@ namespace winmaped2
 		public int PlayerStartX;
 		public int PlayerStartY;
 
-		public ArrayList Layers = new ArrayList();
+		public List<MapLayer> Layers = new List<MapLayer>();
 
 		public MapLayer ObsLayer;
 		public MapLayer ZoneLayer;
 		public MapLayer EntLayer;
 
-		public ArrayList Zones = new ArrayList();
-		public ArrayList Chars = new ArrayList();
-		public ArrayList MoveScripts = new ArrayList();
-		public ArrayList Entities = new ArrayList();
+		public List<MapZone> Zones = new List<MapZone>();
+		public List<MapEntity> Entities = new List<MapEntity>();
 
 		public class Note
 		{
@@ -667,7 +667,8 @@ namespace winmaped2
 				UIState.AddLayer(ml);
 
 			RenderManager.AddLayer(ml);
-			return Layers.Add(ml);
+			Layers.Add(ml);
+			return Layers.Count - 1;
 		}
 		public void DeleteLayer(MapLayer ml)
 		{

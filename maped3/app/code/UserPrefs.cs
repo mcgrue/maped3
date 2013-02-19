@@ -12,6 +12,8 @@ namespace winmaped2
         public int DefaultZoomLevel;
         public bool AutoSave;
 
+				public bool Astral;
+
         public int AutoSaveDelay;
         public int AutoSaveLimit;
 

@@ -3,12 +3,15 @@ using System.IO;
 using System.Text;
 using System.Collections;
 
-
-
 namespace winmaped2
 {
-	public class InputOutput
+	public partial class InputOutput
 	{
+		const int VSP_SIGNATURE = 5264214;
+		const int VSP_VERSION = 6;
+		const int VSP_FORMAT = 1;
+		const int VSP_COMPRESSION = 1;
+
 		public unsafe static Map ReadMap3(FileInfo fi)
 		{
 			byte[] m3s = new byte[] { (byte)'V', (byte)'3', (byte)'M', (byte)'A', (byte)'P', (byte)0 };
@@ -204,8 +207,8 @@ namespace winmaped2
 				me.ChrName = Helper.BytesToString(br.ReadBytes(256));
 				me.Description = Helper.BytesToString(br.ReadBytes(256));
 				me.onActivate = Helper.BytesToString(br.ReadBytes(256));
-				me.ID = map.Entities.Add(me);
-
+				map.Entities.Add(me);
+				me.ID = map.Entities.Count-1;
 			}
 			br.Close();
 			string rs2 = "";
@@ -250,10 +253,6 @@ namespace winmaped2
 			}
 			return null;
 		}
-		const int VSP_SIGNATURE = 5264214;
-		const int VSP_VERSION = 6;
-		const int VSP_FORMAT = 1;
-		const int VSP_COMPRESSION = 1;
 
 		public unsafe static Vsp24 ReadVsp24(FileInfo fi)
 		{
@@ -334,6 +333,7 @@ namespace winmaped2
 
 			return vsp;
 		}
+		
 		public unsafe static int WriteVsp(FileInfo fi, Vsp24 vsp)
 		{
 			if (fi.Exists) fi.Delete();
@@ -407,7 +407,15 @@ namespace winmaped2
 			bw.Close();
 			return 0;
 		}
-		public unsafe static int WriteMap(FileInfo fi, Map map)
+
+		public static int WriteMap(FileInfo fi, Map map)
+		{
+			//WriteMapJson(fi, map);
+			//return 0;
+			return WriteMap_Archaic(fi, map);
+		}
+
+		public unsafe static int WriteMap_Archaic(FileInfo fi, Map map)
 		{
 			byte[] map3_signature = new byte[] { (byte)'V', (byte)'3', (byte)'M', (byte)'A', (byte)'P', (byte)0 };
 			if (map == null) return -1;
@@ -551,6 +559,10 @@ namespace winmaped2
 			return 0;
 
 		}
+		
+		/// <summary>
+		/// analyzes map format and dispatches it to the correct loader
+		/// </summary>
 		public static Map ReadMap(string filename)
 		{
 			// open file and examine it to determine if we support this format
@@ -569,62 +581,58 @@ namespace winmaped2
 			int version = br.ReadInt32();
 
 
-			int mtype = 0;
+			int mtype = 99;
 
 			br.Close();
 
-			for (int i = 0; i < 6; i++)
+			foreach (var signature in new[] { m3s, m2s })
 			{
-				if (sig[i] != m2s[i])
-				{
-					mtype = 0;
-					break;
-				}
-				else mtype = 1;
-			}
-			if (mtype == 0)
-				for (int i = 0; i < 6; i++)
-				{
-					if (sig[i] != m3s[i])
+				for (int i = 0; i < signature.Length; i++)
+					if (sig[i] != signature[i])
 					{
-						mtype = 0;
-						break;
+						goto NOT;
 					}
-					else mtype = 2;
-				}
+				if (signature == m3s) mtype = 3;
+				if (signature == m2s) mtype = 2;
+				break;
+			NOT: ;
+			}
+
 			//			map.FileOnDisk=fi;
 			System.IO.Directory.SetCurrentDirectory(fi.Directory.FullName);
 			Map m = null;
-			try
+			if (mtype == 99)
 			{
-				switch (mtype)
+				m = ReadMapJson(fi);
+			}
+
+			if (m == null)
+			{
+				try
 				{
-					case 1:
-						m = ReadMap2(fi);
-						break;
-					case 2:
-						m = ReadMap3(fi);
-						break;
-					default: Errors.Error("I/O", "Unsupported file format."); return null;
+					switch (mtype)
+					{
+						case 2:
+							m = ReadMap2(fi);
+							break;
+						case 3:
+							m = ReadMap3(fi);
+							break;
+						case 99:
+
+						default: Errors.Error("I/O", "Unsupported file format."); return null;
+					}
+				}
+				catch
+				{
+					Errors.Error("I/O Error", "Unable to load map");
+					return null;
 				}
 			}
-			catch (System.IO.EndOfStreamException)
-			{
-				Errors.Error("I/O Error", "Unable to load map: Unexpected end of file");
-				return null;
-			}
-			/*			catch(Exception e)
-															{
-																			Errors.Error("I/O Error", "Unable to load map: Unknown read error. File is probably corrupt.\r\n" + e.Message + "\r\nMAP FILE: " + fi.FullName);
-																			return null;
-															}			*/
+
 			return m;
 		}
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="fi"></param>
-		/// <param name="map"></param>
+		
 		public static Map ReadMap2(FileInfo fi)
 		{
 			FileStream fs = fi.OpenRead();
@@ -978,11 +986,6 @@ namespace winmaped2
 			return map;
 		}
 
-		/// <summary>
-		/// reads data from file into vsp data structure
-		/// </summary>
-		/// <param name="fi">FileInfo of the file to be opened</param>
-		/// <param name="vsp">Vsp structure to load into</param>
 		public static Vsp24 ReadVsp8(FileInfo fi)
 		{
 			if (!fi.Exists) return null;
@@ -1052,13 +1055,9 @@ namespace winmaped2
 			return Vsp24.FromVsp8(vsp);
 		}
 
-
 		/// <summary>
 		/// loads the data from 'fi' into 'chr'.
-		///
 		/// </summary>
-		/// <param name="fi"></param>
-		/// <param name="chr"></param>
 		/// <returns>-1 on failure, 0 on success</returns>
 		public static int ReadCHR(FileInfo fi, MapChr chr)
 		{
@@ -1118,7 +1117,6 @@ namespace winmaped2
 		/// 8-bit RLE decompression 
 		/// </summary>
 		/// <param name="compressed"></param>
-		/// <returns></returns>
 		public static byte[] DecompressData8(byte[] compressed)
 		{
 			MemoryStream mstream = new MemoryStream();
@@ -1151,11 +1149,11 @@ namespace winmaped2
 			bw.Close();
 			return decompressed;
 		}
+		
 		/// <summary>
 		/// 16-bit RLE decompression
 		/// </summary>
 		/// <param name="compressed"></param>
-		/// <returns></returns>
 		public static ushort[] DecompressData16(ushort[] compressed)
 		{
 			MemoryStream ms = new MemoryStream();

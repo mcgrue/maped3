@@ -101,6 +101,10 @@
       <Name>MRU</Name>
       <HintPath>..\components\MRU.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\components\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="RegisterFileType">
       <Name>RegisterFileType</Name>
       <HintPath>..\components\RegisterFileType.dll</HintPath>
@@ -140,6 +144,7 @@
     <Compile Include="code\InputOutput.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="code\InputOutputJson.cs" />
     <Compile Include="code\Map.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -271,6 +276,12 @@
     <Compile Include="dialogs\NewMapWnd.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="dialogs\SizerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dialogs\SizerDialog.Designer.cs">
+      <DependentUpon>SizerDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="dialogs\TileEd.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -393,6 +404,9 @@
       <DependentUpon>NewMapWnd.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="dialogs\SizerDialog.resx">
+      <DependentUpon>SizerDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="dialogs\TileEd.resx">
       <DependentUpon>TileEd.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -446,9 +460,6 @@
   <ItemGroup>
     <Folder Include="Properties\" />
     <Folder Include="resources\cursors\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

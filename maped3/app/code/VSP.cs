@@ -320,6 +320,9 @@ namespace winmaped2
 				tw = (bmp.Width - gridsize) / (Global.TILE_SIZE + gridsize);
 				th = (bmp.Height - gridsize) / (Global.TILE_SIZE + gridsize);
 
+				//zero 30-jan-2013 - it doesnt make sense to import art of the wrong width for the tile bank
+				tw = Global.VSP_SIZE_TILES;
+
 				int xofs = Global.TILE_SIZE + gridsize;
 				int yofs = Global.TILE_SIZE + gridsize;
 
