@@ -276,6 +276,12 @@
     <Compile Include="dialogs\NewMapWnd.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="dialogs\SizerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dialogs\SizerDialog.Designer.cs">
+      <DependentUpon>SizerDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="dialogs\TileEd.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -294,7 +300,6 @@
     <Compile Include="pr2\LockedBitmap.cs" />
     <Compile Include="pr2\Render.cs" />
     <Compile Include="pr2\RenderImage.cs" />
-    <Content Include="wishlist.txt" />
     <EmbeddedResource Include="controls\ColorPicker.resx">
       <DependentUpon>ColorPicker.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -398,6 +403,9 @@
     <EmbeddedResource Include="dialogs\NewMapWnd.resx">
       <DependentUpon>NewMapWnd.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="dialogs\SizerDialog.resx">
+      <DependentUpon>SizerDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="dialogs\TileEd.resx">
       <DependentUpon>TileEd.cs</DependentUpon>
