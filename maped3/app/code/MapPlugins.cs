@@ -8,9 +8,6 @@ using System.IO;
 
 namespace winmaped2
 {
-
-	
-
 	namespace Plugins
 	{
 
