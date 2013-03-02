@@ -29,13 +29,7 @@ namespace winmaped2
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
-
-
 		}
-
-
-
 
 		/// <summary>
 		/// Clean up any resources being used.

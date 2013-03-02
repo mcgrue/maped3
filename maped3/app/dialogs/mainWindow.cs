@@ -293,7 +293,7 @@ namespace winmaped2
 			lwLayers.Add(lw);
 			lPanel.Controls.Add(lw);
 			lPanel.SetControlLayouts();
-		}
+        }
 
 		public void lpSwapLayer(MapLayer oldLayer, MapLayer newLayer)
 		{
@@ -301,9 +301,9 @@ namespace winmaped2
 			{
 				if (lp is LPanel)
 				{
-					if (((LPanel)lp).mLayerRef == oldLayer)
+					if (((LPanel)lp).LayerRef == oldLayer)
 					{
-						((LPanel)lp).mLayerRef = newLayer;
+						((LPanel)lp).LayerRef = newLayer;
 					}
 				}
 			}
@@ -2979,15 +2979,15 @@ namespace winmaped2
 		private void b_layerup_Click(object sender, System.EventArgs e)
 		{
 			if (Global.ActiveMap == null) return;
-			Global.ActiveMap.RenderManager.MoveUp(Global.lpSelection.mLayerRef);
-			lpUpdate(Global.ActiveMap, Global.lpSelection.mLayerRef);
+			Global.ActiveMap.RenderManager.MoveUp(Global.layerPanelSelection.LayerRef);
+			lpUpdate(Global.ActiveMap, Global.layerPanelSelection.LayerRef);
 		}
 
 		private void b_layerdown_Click(object sender, System.EventArgs e)
 		{
 			if (Global.ActiveMap == null) return;
-			Global.ActiveMap.RenderManager.MoveDown(Global.lpSelection.mLayerRef);
-			lpUpdate(Global.ActiveMap, Global.lpSelection.mLayerRef);
+			Global.ActiveMap.RenderManager.MoveDown(Global.layerPanelSelection.LayerRef);
+			lpUpdate(Global.ActiveMap, Global.layerPanelSelection.LayerRef);
 		}
 
 		private void b_layerdel_Click(object sender, System.EventArgs e)
@@ -2995,7 +2995,7 @@ namespace winmaped2
 			if (MessageBox.Show("WARNING: You are about to delete a layer. Are you sure you want to delete this layer?", "Confirm", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning)
 							== DialogResult.Cancel)
 				return;
-			Global.ActiveMap.DeleteLayer(Global.lpSelection.mLayerRef);
+			Global.ActiveMap.DeleteLayer(Global.layerPanelSelection.LayerRef);
 			lpInit(Global.ActiveMap);
 		}
 

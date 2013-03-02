@@ -226,7 +226,14 @@ namespace winmaped2.map_plugins
 
 		public void MouseDown(MapEventInfo mei)
 		{
-			mei.opManager.beginGroup("Map: Brush");
+            //mei.editedLayer. PENIS
+            if (!mei.editedLayer.canDraw)
+            {
+                MessageBox.Show("Cannot edit a hidden layer.");
+                return;
+            }
+            
+            mei.opManager.beginGroup("Map: Brush");
 		}
 		public void MouseMove(MapEventInfo mei) { }
 		public void MouseMoveTile(MapEventInfo mei)
@@ -234,11 +241,18 @@ namespace winmaped2.map_plugins
 			winmaped2.PrimitiveDrawer.DrawLine(mei.previous.tx, mei.previous.ty, mei.current.tx, mei.current.ty, new PrimitiveDrawer.Callback(cb), mei);
 			//mei.invalidate();
 		}
+
 		public void MouseUp(MapEventInfo mei)
 		{
+            if (!mei.editedLayer.canDraw)
+            {
+                return;
+            }
+
 			mei.opManager.endGroup();
 			//mei.invalidate();
 		}
+
 		protected virtual int getValue(MapEventInfo mei)
 		{
 			if (mei.editedLayer.type == LayerType.Tile || mei.editedLayer.type == LayerType.Obs || mei.editedLayer.type == LayerType.Zone)

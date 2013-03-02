@@ -306,8 +306,6 @@ namespace winmaped2
 		}
 
 
-
-
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			if (!live)

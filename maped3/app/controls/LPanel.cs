@@ -7,18 +7,17 @@ namespace winmaped2
 	public class LPanel : System.Windows.Forms.Panel
 	{
 		ContextMenu cmenu;
-		public bool Render;
-		public bool Write;
+		public bool Render { get; private set; }
+        public bool Write { get; private set; }
 
 
-		public int LayerRef;
-		public MapLayer mLayerRef;
+		public int LayerIdx;
+		public MapLayer LayerRef;
 
 		Font nameFont = new System.Drawing.Font("Verdana", 8.5F, FontStyle.Regular);
 		Font nameFontS = new Font("Verdana", 8.5F, FontStyle.Bold | FontStyle.Italic);
 		Font plaxFont = new System.Drawing.Font("Verdana", 6.5F, FontStyle.Regular);
 		SolidBrush sbspec = new SolidBrush(Color.FromArgb(198, 244, 230));
-
 
 
 		private void DrawFrame(PaintEventArgs e, int x, int y, int w, int h)
@@ -38,8 +37,8 @@ namespace winmaped2
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			if (mLayerRef == null || Global.ActiveMap == null) return;
-			if (mLayerRef is MapLayerSpecial)
+			if (LayerRef == null || Global.ActiveMap == null) return;
+			if (LayerRef is MapLayerSpecial)
 			{
 				e.Graphics.FillRectangle(sbspec, 0, 0, Width, Height);
 			}
@@ -48,7 +47,7 @@ namespace winmaped2
 				e.Graphics.FillRectangle(SystemBrushes.Control, 0, 0, Width, Height);
 			}
 			e.Graphics.DrawLine(Pens.Black, 0, 0, Width - 1, 0);
-			if (!(mLayerRef is MapLayerSpecial))
+			if (!(LayerRef is MapLayerSpecial))
 			{
 				DrawFrame(e, 0, 1, 44, Height - 3);
 				DrawFrameInv(e, 4, 4, 16, 16);
@@ -76,21 +75,21 @@ namespace winmaped2
 
 
 			Font f = null;
-			int h = e.Graphics.MeasureString(mLayerRef.name, nameFont).ToSize().Height;
-			if (Global.ActiveMap.Layers.IndexOf(mLayerRef) == 0)
+			int h = e.Graphics.MeasureString(LayerRef.name, nameFont).ToSize().Height;
+			if (Global.ActiveMap.Layers.IndexOf(LayerRef) == 0)
 				f = nameFontS;
 			else f = nameFont;
 
-			string output = mLayerRef.name;
-			if (mLayerRef.type == LayerType.Tile)
-				output = (mLayerRef.ID + 1).ToString() + ": " + output;
+			string output = LayerRef.name;
+			if (LayerRef.type == LayerType.Tile)
+				output = (LayerRef.ID + 1).ToString() + ": " + output;
 			e.Graphics.DrawString(output, f, SystemBrushes.ControlText, 50, Height / 2 - h / 2);
 			int w = 0;
 
 
-			if (mLayerRef.type != LayerType.Tile) return;
+			if (LayerRef.type != LayerType.Tile) return;
 
-			string spl = (100 - mLayerRef.Translucency).ToString() + "%";
+			string spl = (100 - LayerRef.Translucency).ToString() + "%";
 
 			Size s = e.Graphics.MeasureString(spl, plaxFont).ToSize();
 			w = s.Width;
@@ -102,7 +101,7 @@ namespace winmaped2
 			Graphics g = e.Graphics;
 
 			PaintFunctions.PaintFrame(g, SliderRect.X, SliderRect.Y, 104, 8);
-			g.FillRectangle(Brushes.DarkBlue, SliderRect.X + 2, SliderRect.Y + 2, 100 - mLayerRef.Translucency, 4);
+			g.FillRectangle(Brushes.DarkBlue, SliderRect.X + 2, SliderRect.Y + 2, 100 - LayerRef.Translucency, 4);
 
 		}
 		Rectangle SliderRect = new Rectangle(160, 8, 104, 8);
@@ -119,7 +118,7 @@ namespace winmaped2
 		int _slideUpdate = 0;
 		private void SlideTo(int x)
 		{
-			mLayerRef.Translucency = 100 - Math.Max(Math.Min(x, 100), 0);
+			LayerRef.Translucency = 100 - Math.Max(Math.Min(x, 100), 0);
 			if (_slideUpdate == 0)
 			{
 				Global.ForceRedraws();
@@ -140,19 +139,24 @@ namespace winmaped2
 			{
 				if (Render == false)
 				{
+                    LayerRef.canDraw = true;
+
 					Render = true;
 					if (Global.ActiveMap != null)
 					{
-						Global.ActiveMap.UIState[LayerRef].bRender = true;
+						Global.ActiveMap.UIState[LayerIdx].bRender = true;
 					}
 				}
 				else
 				{
 					//if ( Write ) return;
 					Render = false;
-					if (Global.ActiveMap != null)
+
+                    LayerRef.canDraw = false;
+
+                    if (Global.ActiveMap != null)
 					{
-						Global.ActiveMap.UIState[LayerRef].bRender = false;
+						Global.ActiveMap.UIState[LayerIdx].bRender = false;
 					}
 				}
 				Global.ForceRedraws();
@@ -163,7 +167,7 @@ namespace winmaped2
 				SelectForWrite();
 				Global.ForceRedraws();
 			}
-			else if (e.Button == MouseButtons.Left && SliderRect.Contains(e.X, e.Y) && mLayerRef.type == LayerType.Tile)
+			else if (e.Button == MouseButtons.Left && SliderRect.Contains(e.X, e.Y) && LayerRef.type == LayerType.Tile)
 			{
 				SliderHasFocus = true;
 				_slideUpdate = 0;
@@ -175,13 +179,13 @@ namespace winmaped2
 			}
 			else if (e.Clicks == 2 && e.Button == MouseButtons.Left)
 			{
-				if (mLayerRef.type == LayerType.Tile)
+				if (LayerRef.type == LayerType.Tile)
 					open_properties();
-				else if (mLayerRef.type == LayerType.Zone)
+				else if (LayerRef.type == LayerType.Zone)
 				{
 					Global.mainWindow.OpenZoneEditor();
 				}
-				else if (mLayerRef.type == LayerType.Entity)
+				else if (LayerRef.type == LayerType.Entity)
 				{
 					Global.mainWindow.OpenEntityEditor();
 				}
@@ -210,16 +214,16 @@ namespace winmaped2
 			Write = true;
 			Render = true;
 
-			if (Global.ActiveMap != null) Global.ActiveMap.UIState[LayerRef].bRender = true;
+			if (Global.ActiveMap != null) Global.ActiveMap.UIState[LayerIdx].bRender = true;
 
-			if (Global.lpSelection != null)
+			if (Global.layerPanelSelection != null)
 			{
-				LPanel lp = ((LPanel)Global.lpSelection);
+				LPanel lp = ((LPanel)Global.layerPanelSelection);
 				lp.Write = false;
 				lp.Invalidate();
 			}
-			Global.lpSelection = this;
-			Global.FireWriteEvent(new Global.LEventArgs(LayerRef));
+			Global.layerPanelSelection = this;
+			Global.FireWriteEvent(new Global.LEventArgs(LayerIdx));
 
 		}
 		public LPanel(Panel lTool, MapLayer ml, bool render, bool write, int layer)
@@ -230,20 +234,20 @@ namespace winmaped2
 			SetStyle(ControlStyles.Opaque, true);
 			SetStyle(ControlStyles.UserMouse, true);
 
-			LayerRef = layer;
-			mLayerRef = ml;
+			LayerIdx = layer;
+			LayerRef = ml;
 			Render = ml.type == LayerType.Tile;
 			ml.parentmap.UIState[layer].bRender = Render;
 
 			Cursor = Cursors.Hand;
 
-			if (mLayerRef is MapLayerSpecial)
+			if (LayerRef is MapLayerSpecial)
 				Size = new Size(lTool.Width - 4, 16);
 			else
 				Size = new Size(lTool.Width - 4, 25);
 
 			Write = write;
-			if (Write) Global.lpSelection = this;
+			if (Write) Global.layerPanelSelection = this;
 			if (ml.type != LayerType.Tile)
 				return;
 
@@ -257,10 +261,10 @@ namespace winmaped2
 		private void open_properties()
 		{
 			LayerPropertiesWnd lpw = new LayerPropertiesWnd();
-			lpw.init(mLayerRef);
+			lpw.init(LayerRef);
 			if (lpw.ShowDialog() == DialogResult.Cancel) return;
-			lpw.setvalues(mLayerRef);
-			mLayerRef.parentmap.touch();
+			lpw.setvalues(LayerRef);
+			LayerRef.parentmap.touch();
 			Global.ForceRedraws();
 		}
 		private void properties_menu(object sender, EventArgs e)

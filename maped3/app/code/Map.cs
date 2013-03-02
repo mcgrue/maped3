@@ -33,6 +33,8 @@ namespace winmaped2
 
 	public class MapLayer
 	{
+        public bool canDraw = true;
+
 		public int _Width;
 		public int _Height;
 		public short[] Data;
@@ -606,7 +608,6 @@ namespace winmaped2
 			}
 			return m;
 		}
-
 
 		public MapUIRenderState UIState = new MapUIRenderState();
 

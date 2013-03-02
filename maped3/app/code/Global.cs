@@ -236,7 +236,7 @@ namespace winmaped2 {
         public static event SimpleEventHandler zoomChanged;
 
         public static int editedLayerIndex { get { return Global.ActiveMap.Layers.IndexOf(editedLayer); } }
-        public static MapLayer editedLayer { get { return Global.lpSelection.mLayerRef; } }
+        public static MapLayer editedLayer { get { return Global.layerPanelSelection.LayerRef; } }
         public static event SimpleEventHandler SelectedEntityChanged;
         public static event SimpleEventHandler SelectedZoneChanged;
         public static MapEntity _SelectedEntity;
@@ -274,7 +274,7 @@ namespace winmaped2 {
                 IsVspFocused,
                 IsBrushFocused;
 
-        public static LPanel lpSelection;
+        public static LPanel layerPanelSelection;
 
         public static void RedrawMinimap() {
             MiniMap.Invalidate();
