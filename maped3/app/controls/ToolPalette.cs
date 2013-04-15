@@ -47,10 +47,17 @@ namespace winmaped2
 		{
 			ToolButton tb = (ToolButton)sender;
 			if(!tb.Checked) return;
-			_currMapPlugin = (Plugins.IMapPlugin)tools[tb.guid];
-			if(SelectedPluginChanged != null)
-				SelectedPluginChanged(new ToolEventArgs(_currMapPlugin));
+
+            ChangeTool(tb.guid);
 		}
+
+        public void ChangeTool(Guid toolGuid)
+        {
+            _currMapPlugin = (Plugins.IMapPlugin)tools[toolGuid];
+            if (SelectedPluginChanged != null)
+                SelectedPluginChanged(new ToolEventArgs(_currMapPlugin));
+            _currMapPlugin.GetButton().Checked = true;
+        }
 	}
 	public class ToolEventArgs
 	{

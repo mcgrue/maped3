@@ -17,6 +17,10 @@ namespace winmaped2.map_plugins
 			return noteTool;
 		}
 
+        ToolPalette.ToolButton butt;
+        public ToolPalette.ToolButton GetButton() { return butt; }
+        public void SetButton( ToolPalette.ToolButton tb ) { butt = tb; } 
+
 		public Guid guid { get { return new Guid("{CBF5D6F6-801A-4dee-A0E1-EC23435D5586}"); } }
 		public LayerType[] layerTypes { get { return new LayerType[] { LayerType.Null, LayerType.Tile, LayerType.Zone, LayerType.Obs, LayerType.Entity, LayerType.Special_Retrace }; } }
 
@@ -169,6 +173,10 @@ namespace winmaped2.map_plugins
 		public LayerType[] layerTypes { get { return new LayerType[] { LayerType.Entity, LayerType.Tile, LayerType.Obs, LayerType.Zone }; } }
 		public Guid guid { get { return new Guid("{7A510AD2-6C45-4010-B229-3847823164B5}"); } }
 
+        ToolPalette.ToolButton butt;
+        public ToolPalette.ToolButton GetButton() { return butt; }
+        public void SetButton(ToolPalette.ToolButton tb) { butt = tb; } 
+
 		public IMapTool getTool(bool lb, bool mb, bool rb, bool shift, bool ctrl, bool alt)
 		{
 			return this;
@@ -213,6 +221,10 @@ namespace winmaped2.map_plugins
 		public LayerType[] layerTypes { get { return new LayerType[] { LayerType.Tile, LayerType.Obs, LayerType.Zone }; } }
 		public Guid guid { get { return new Guid("{7A510AD2-6C45-4010-B229-D563EDBF64B5}"); } }
 
+        ToolPalette.ToolButton butt;
+        public ToolPalette.ToolButton GetButton() { return butt; }
+        public void SetButton(ToolPalette.ToolButton tb) { butt = tb; } 
+
 		public IMapTool getTool(bool lb, bool mb, bool rb, bool shift, bool ctrl, bool alt)
 		{
 			if (ctrl)
@@ -221,7 +233,6 @@ namespace winmaped2.map_plugins
 				return null;
 			}
 			return this;
-
 		}
 
 		public void MouseDown(MapEventInfo mei)
@@ -229,8 +240,7 @@ namespace winmaped2.map_plugins
             //mei.editedLayer. PENIS
             if (!mei.editedLayer.canDraw)
             {
-                MessageBox.Show("Cannot edit a hidden layer.");
-                return;
+                //MessageBox.Show("You're editing a hidden layer...");
             }
             
             mei.opManager.beginGroup("Map: Brush");
@@ -279,6 +289,9 @@ namespace winmaped2.map_plugins
 		protected pr2.IRenderImage img;
 		public abstract Guid guid { get; }
 
+        ToolPalette.ToolButton butt;
+        public ToolPalette.ToolButton GetButton() { return butt; }
+        public void SetButton(ToolPalette.ToolButton tb) { butt = tb; } 
 
 		public IMapTool getTool(bool lb, bool mb, bool rb, bool shift, bool ctrl, bool alt)
 		{
@@ -388,6 +401,10 @@ namespace winmaped2.map_plugins
 	class ClipboardPlugin : IMapPlugin
 	{
 		public Guid guid { get { return new Guid("{BBC38AB0-5872-4862-A629-6F82AE0E62DC}"); } }
+
+        ToolPalette.ToolButton butt;
+        public ToolPalette.ToolButton GetButton() { return butt; }
+        public void SetButton(ToolPalette.ToolButton tb) { butt = tb; } 
 
 		class ClipboardPaster : IMapDragTileTool, IMapPainter, IMapTweaker
 		{
@@ -542,6 +559,10 @@ namespace winmaped2.map_plugins
 		public string name { get { return "FloodFill"; } }
 		public LayerType[] layerTypes { get { return new LayerType[] { LayerType.Tile, LayerType.Obs }; } }
 		public Guid guid { get { return new Guid("{29B9855E-E0F7-4b30-A9B0-1C2A28EDBB60}"); } }
+
+        ToolPalette.ToolButton butt;
+        public ToolPalette.ToolButton GetButton() { return butt; }
+        public void SetButton(ToolPalette.ToolButton tb) { butt = tb; } 
 
 		public IMapTool getTool(bool lb, bool mb, bool rb, bool shift, bool ctrl, bool alt)
 		{

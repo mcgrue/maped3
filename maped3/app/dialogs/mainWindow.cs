@@ -155,6 +155,76 @@ namespace winmaped2
 		private CollapsiblePanel layerPanel;
 
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.B))
+            {
+                Global.toolPalette.ChangeTool(new Guid("{7A510AD2-6C45-4010-B229-D563EDBF64B5}"));
+
+                return true;
+            }
+
+            if (keyData == (Keys.M))
+            {
+                Global.toolPalette.ChangeTool(new Guid("{BBC38AB0-5872-4862-A629-6F82AE0E62DC}"));
+                return true;
+            }
+
+            if (keyData == (Keys.G)) {
+
+                Global.toolPalette.ChangeTool(new Guid("{29B9855E-E0F7-4b30-A9B0-1C2A28EDBB60}"));
+                return true;
+            }
+
+            /*
+            if (keyData == (Keys.A))
+            {
+                if (Global.ActiveMap == null) return true;
+ 
+                if (Global.TileViewerA.ActiveTileIndex + 1 >= Global.ActiveMap.vsp.Tiles.Count)
+                    Global.TileViewerA.ActiveTileIndex = 0;
+                else                
+                    Global.TileViewerA.ActiveTileIndex++;
+
+                return true;
+            }
+
+            if (keyData == (Keys.Z))
+            {
+                if (Global.ActiveMap == null) return true;
+
+                if (Global.TileViewerA.ActiveTileIndex - 1 < 0) Global.TileViewerA.ActiveTileIndex = Global.ActiveMap.vsp.Tiles.Count - 1;
+                else Global.TileViewerA.ActiveTileIndex--;
+                
+                return true;
+            }
+
+            if (keyData == (Keys.S))
+            {
+                if (Global.ActiveMap == null) return true;
+
+                if (Global.TileViewerB.ActiveTileIndex + 1 >= Global.ActiveMap.vsp.Tiles.Count)
+                    Global.TileViewerB.ActiveTileIndex = 0;
+                else
+                    Global.TileViewerB.ActiveTileIndex++;
+
+                return true;
+            }
+
+            if (keyData == (Keys.X))
+            {
+                if (Global.ActiveMap == null) return true;
+
+                if (Global.TileViewerB.ActiveTileIndex - 1 < 0) Global.TileViewerB.ActiveTileIndex = Global.ActiveMap.vsp.Tiles.Count - 1;
+                else Global.TileViewerB.ActiveTileIndex--;
+
+                return true;
+            }
+            */
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
 		public MainWindow()
 		{
 			//
@@ -168,39 +238,35 @@ namespace winmaped2
 			Global.zoomChanged += new winmaped2.Global.SimpleEventHandler(Global_zoomChanged);
 			Global.zoomChanged += new winmaped2.Global.SimpleEventHandler(zoomchanged);
 
-
 			Global.FrameCalc.init();
 
-			Plugins.IMapPlugin brush, rectfill, line, rectangle, floodfill, clipboard, noteTool;
-			Global.pluginManager.addPlugin(brush = new winmaped2.map_plugins.BrushTool());
-			Global.pluginManager.addPlugin(rectfill = new winmaped2.map_plugins.RectFill());
-			Global.pluginManager.addPlugin(line = new winmaped2.map_plugins.Line());
-			Global.pluginManager.addPlugin(rectangle = new winmaped2.map_plugins.Rectangle());
-			Global.pluginManager.addPlugin(floodfill = new winmaped2.map_plugins.FloodFillTool());
-			Global.pluginManager.addPlugin(clipboard = new winmaped2.map_plugins.ClipboardPlugin());
-			Global.pluginManager.addPlugin(noteTool = winmaped2.map_plugins.NoteTool.noteTool);
+			Plugins.IMapPlugin 
+                brush = null, 
+                rectfill = null, 
+                line = null, 
+                rectangle = null, 
+                floodfill = null, 
+                clipboard = null, 
+                noteTool = null;
+			
 
-			toolPalette.registerButton(radioButton1, brush);
-			toolPalette.registerButton(radioButton2, rectfill);
-			toolPalette.registerButton(radioButton3, line);
-			toolPalette.registerButton(radioButton4, rectangle);
-			toolPalette.registerButton(radioButton5, floodfill);
-			toolPalette.registerButton(radioButton6, clipboard);
-			toolPalette.registerButton(radioButton7, noteTool);
 
-			((Bitmap)radioButton1.Image).MakeTransparent(Color.Magenta);
-			((Bitmap)radioButton2.Image).MakeTransparent(Color.Magenta);
-			((Bitmap)radioButton3.Image).MakeTransparent(Color.Magenta);
-			((Bitmap)radioButton4.Image).MakeTransparent(Color.Magenta);
-			((Bitmap)radioButton5.Image).MakeTransparent(Color.Magenta);
-			((Bitmap)b_runmap.Image).MakeTransparent(Color.Magenta);
+            SetupButton(ref brush,      new winmaped2.map_plugins.BrushTool(),       radioButton1);
+            SetupButton(ref rectfill,   new winmaped2.map_plugins.RectFill(),        radioButton2);
+            SetupButton(ref line,       new winmaped2.map_plugins.Line(),            radioButton3);
+            SetupButton(ref rectangle,  new winmaped2.map_plugins.Rectangle(),       radioButton4);
+            SetupButton(ref floodfill,  new winmaped2.map_plugins.FloodFillTool(),   radioButton5);
+            SetupButton(ref clipboard,  new winmaped2.map_plugins.ClipboardPlugin(),  radioButton6);
+            
+            SetupButton(ref noteTool,   winmaped2.map_plugins.NoteTool.noteTool,       radioButton7);
+
+
+            ((Bitmap)b_runmap.Image).MakeTransparent(Color.Magenta);
 			((Bitmap)b_layeradd.Image).MakeTransparent(Color.Magenta);
 			((Bitmap)b_layerdel.Image).MakeTransparent(Color.Magenta);
 			((Bitmap)b_layerup.Image).MakeTransparent(Color.Magenta);
 			((Bitmap)b_layerdown.Image).MakeTransparent(Color.Magenta);
 			((Bitmap)b_layerproperties.Image).MakeTransparent(Color.Magenta);
-
-
 
 			Images.ImagesInit();
 
@@ -280,6 +346,15 @@ namespace winmaped2
 			//tilesPanel.CanLargeify = true;
 			tilesPanel.OnLargeified = OnLargeifyTiles;
 		}
+
+        private void SetupButton(ref Plugins.IMapPlugin plugin, Plugins.IMapPlugin pluginInstance, ToolPalette.ToolButton tb)
+        {
+            plugin = pluginInstance;
+            Global.pluginManager.addPlugin(plugin);
+            toolPalette.registerButton(tb, plugin);
+            plugin.SetButton(tb);
+            ((Bitmap)tb.Image).MakeTransparent(Color.Magenta);
+        }
 
 		void OnLargeifyTiles(object o)
 		{

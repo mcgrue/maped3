@@ -64,7 +64,7 @@ namespace winmaped2
 
 			public IOperation currOperation { get { return operations.Count==0?null:(IOperation)operations.Peek(); } }
 			public string currOperationName { get { return currOperation==null?"":currOperation.name; } }
-			public OperationGroup currGroup { get { return (OperationGroup)groups.Peek(); } }
+			public OperationGroup currGroup { get { if(groups.Count == 0) return null;  return (OperationGroup)groups.Peek(); } }
 			public void beginGroup(string name)
 			{
 				OperationGroup opGroup = new OperationGroup();

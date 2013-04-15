@@ -45,6 +45,8 @@ namespace winmaped2
 		{
 			//string name { get; }
 			IMapTool getTool(bool lb, bool mb, bool rb, bool shift, bool ctrl, bool alt);
+            void SetButton( ToolPalette.ToolButton button );
+            ToolPalette.ToolButton GetButton();
 		}
 
 		public interface IMapPluginCursor

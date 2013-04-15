@@ -17,7 +17,7 @@ namespace winmaped2 {
         public enum SourceType { Vsp, Obstruction };
         public SourceType TileSourceType;
         public Vsp24Tile ActiveTile { get { return active_tile; } set { active_tile = value; repaint(); } }
-        public int ActiveTileIndex { get { return atx; } set { atx = value; if (Global.ActiveMap != null) active_tile = (Vsp24Tile)Global.ActiveMap.vsp.Tiles[atx]; } }
+        public int      ActiveTileIndex { get { return atx; } set { atx = value; if (Global.ActiveMap != null) active_tile = (Vsp24Tile)Global.ActiveMap.vsp.Tiles[atx]; } }
 				public int ActiveObsTileIndex
 				{
 					set
