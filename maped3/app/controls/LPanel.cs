@@ -38,41 +38,51 @@ namespace winmaped2
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			if (LayerRef == null || Global.ActiveMap == null) return;
-			if (LayerRef is MapLayerSpecial)
-			{
-				e.Graphics.FillRectangle(sbspec, 0, 0, Width, Height);
-			}
-			else
-			{
-				e.Graphics.FillRectangle(SystemBrushes.Control, 0, 0, Width, Height);
-			}
-			e.Graphics.DrawLine(Pens.Black, 0, 0, Width - 1, 0);
-			if (!(LayerRef is MapLayerSpecial))
-			{
-				DrawFrame(e, 0, 1, 44, Height - 3);
-				DrawFrameInv(e, 4, 4, 16, 16);
-				if (Render) e.Graphics.DrawImage(Images.BmpRender, 5, 5, 16, 16);
 
-				DrawFrameInv(e, 24, 4, 16, 16);
+            if (LayerRef is MapLayerSpecial) {
+			
+                e.Graphics.FillRectangle(sbspec, 0, 0, Width, Height);
 
-				if (Write) e.Graphics.DrawImage(Images.BmpWrite, 25, 5, 16, 16);
-				DrawFrame(e, 46, 1, Width - 48, Height - 3);
-				e.Graphics.DrawLine(Pens.Black, 45, 0, 45, Height);
-				if (Write)
-					e.Graphics.FillRectangle(Brushes.White, 46, 2, Width - 46, Height - 4);
-			}
-			else
-			{
-				DrawFrame(e, 1, 1, Width, Height - 3);
-				if (Write)
-					e.Graphics.FillRectangle(Brushes.White, 0, 2, Width, Height - 4);
-			}
+            } else {
+			
+                e.Graphics.FillRectangle(SystemBrushes.Control, 0, 0, Width, Height);
 
+            }
+			
+            e.Graphics.DrawLine(Pens.Black, 0, 0, Width - 1, 0);
 
+            if (!(LayerRef is MapLayerSpecial))
+            {
+                DrawFrame(e, 0, 1, 44, Height - 3);
+                DrawFrameInv(e, 4, 4, 16, 16);
+                if (Render) e.Graphics.DrawImage(Images.BmpRender, 5, 5, 16, 16);
+
+                DrawFrameInv(e, 24, 4, 16, 16);
+
+                if (Write)
+                {
+                    e.Graphics.DrawImage(Images.BmpWrite, 25, 5, 16, 16);
+                }
+
+                DrawFrame(e, 46, 1, Width - 48, Height - 3);
+                e.Graphics.DrawLine(Pens.Black, 45, 0, 45, Height);
+
+                if (Write)
+                {
+                    e.Graphics.FillRectangle(Brushes.White, 46, 2, Width - 46, Height - 4);
+                }
+            }
+            else
+            {
+                DrawFrame(e, 1, 1, Width, Height - 3);
+                if (Write)
+                {
+                    e.Graphics.FillRectangle(Brushes.White, 0, 2, Width, Height - 4);
+                }
+            }
 
 			e.Graphics.DrawLine(Pens.Black, 0, Height - 1, Width - 1, Height - 1);
 			e.Graphics.DrawLine(Pens.Black, Width - 1, 0, Width - 1, Height - 1);
-
 
 			Font f = null;
 			int h = e.Graphics.MeasureString(LayerRef.name, nameFont).ToSize().Height;
@@ -135,10 +145,8 @@ namespace winmaped2
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
 			Focus();
-			if (e.X >= 4 && e.X <= 20 && e.Y >= 4 && e.Y <= 20)
-			{
-				if (Render == false)
-				{
+			if (e.X >= 4 && e.X <= 20 && e.Y >= 4 && e.Y <= 20) {
+				if (Render == false) {
                     LayerRef.canDraw = true;
 
 					Render = true;
@@ -162,23 +170,22 @@ namespace winmaped2
 				Global.ForceRedraws();
 
 			}
-			else if (e.X >= 24 && e.X <= 40 && e.Y >= 4 && e.Y <= 20)
-			{
+			else if (e.X >= 24 && e.X <= 40 && e.Y >= 4 && e.Y <= 20) {
 				SelectForWrite();
 				Global.ForceRedraws();
-			}
-			else if (e.Button == MouseButtons.Left && SliderRect.Contains(e.X, e.Y) && LayerRef.type == LayerType.Tile)
-			{
-				SliderHasFocus = true;
+			
+            } else if (e.Button == MouseButtons.Left && SliderRect.Contains(e.X, e.Y) && LayerRef.type == LayerType.Tile) {
+			
+                SliderHasFocus = true;
 				_slideUpdate = 0;
 				SlideTo(e.X - SliderRect.X);
-			}
-			else if (e.Clicks == 1 && e.Button == MouseButtons.Left && e.X > 45)
-			{
-				SelectForWrite();
-			}
-			else if (e.Clicks == 2 && e.Button == MouseButtons.Left)
-			{
+			
+            } else if (e.Clicks == 1 && e.Button == MouseButtons.Left && e.X > 45) {
+				
+                SelectForWrite();
+                Global.ForceRedraws();
+			
+            } else if (e.Clicks == 2 && e.Button == MouseButtons.Left) {
 				if (LayerRef.type == LayerType.Tile)
 					open_properties();
 				else if (LayerRef.type == LayerType.Zone)
@@ -208,10 +215,10 @@ namespace winmaped2
 		}
 
 
-		public void SelectForWrite()
-		{
+		public void SelectForWrite() {
 			if (Write == true) return;
-			Write = true;
+			
+            Write = true;
 			Render = true;
 
 			if (Global.ActiveMap != null) Global.ActiveMap.UIState[LayerIdx].bRender = true;
@@ -224,10 +231,10 @@ namespace winmaped2
 			}
 			Global.layerPanelSelection = this;
 			Global.FireWriteEvent(new Global.LEventArgs(LayerIdx));
-
 		}
-		public LPanel(Panel lTool, MapLayer ml, bool render, bool write, int layer)
-		{
+
+		public LPanel(Panel lTool, MapLayer ml, bool render, bool write, int layer) {
+
 			SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 			SetStyle(ControlStyles.UserPaint, true);
 			SetStyle(ControlStyles.DoubleBuffer, true);
@@ -258,6 +265,7 @@ namespace winmaped2
 			cmenu.Popup += new EventHandler(cmenu_Popup);
 			ContextMenu = cmenu;
 		}
+
 		private void open_properties()
 		{
 			LayerPropertiesWnd lpw = new LayerPropertiesWnd();
@@ -267,6 +275,7 @@ namespace winmaped2
 			LayerRef.parentmap.touch();
 			Global.ForceRedraws();
 		}
+
 		private void properties_menu(object sender, EventArgs e)
 		{
 			open_properties();
@@ -277,54 +286,51 @@ namespace winmaped2
 		{
 		}
 	}
-	public class LayerPanel : Panel
-	{
+
+	public class LayerPanel : Panel {
 
 		bool bMouseContained = false;
 		int mx = 0, my = 0;
 		public LayerPanel()
-			: base()
-		{
+			: base() {
 			SetStyle(ControlStyles.UserPaint, true);
 			SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 			SetStyle(ControlStyles.DoubleBuffer, true);
-
 		}
-		protected override void OnInvalidated(InvalidateEventArgs e)
-		{
+
+		protected override void OnInvalidated(InvalidateEventArgs e) {
 			base.OnInvalidated(e);
 		}
 
-		protected override void OnPaint(PaintEventArgs e)
-		{
+		protected override void OnPaint(PaintEventArgs e) {
 			//e.Graphics.FillRectangle(SystemBrushes.Control,0,0,Width,Height);
 			PaintFunctions.PaintFrame(e.Graphics, 0, 0, Width, Height);
 		}
-		protected override void OnMouseEnter(EventArgs e)
-		{
+
+        protected override void OnMouseEnter(EventArgs e) {
 			base.OnMouseEnter(e);
 			bMouseContained = true;
 		}
-		protected override void OnMouseLeave(EventArgs e)
-		{
+
+		protected override void OnMouseLeave(EventArgs e) {
 			base.OnMouseLeave(e);
 			bMouseContained = false;
 		}
-		protected override void OnMouseMove(MouseEventArgs e)
-		{
+
+		protected override void OnMouseMove(MouseEventArgs e) {
 			base.OnMouseMove(e);
-			if (bMouseContained)
-			{
+
+			if (bMouseContained) {
 				mx = e.X;
 				my = e.Y;
 			}
 		}
 
-		protected override void OnMouseWheel(MouseEventArgs e)
-		{
-			int v = VerticalScroll.Value;
-			if (e.Delta != 0)
-			{
+		protected override void OnMouseWheel(MouseEventArgs e) {
+			
+            int v = VerticalScroll.Value;
+			
+            if (e.Delta != 0) {
 				int delta = e.Delta / 120;
 				v -= delta * 24;
 				if (v < VerticalScroll.Minimum) v = VerticalScroll.Minimum;
@@ -333,28 +339,30 @@ namespace winmaped2
 			}
 		}
 
-		public void SetControlLayouts()
-		{
+		public void SetControlLayouts() {
+
 			int w = Width - 4;
 			int count = Controls.Count;
 
 			int yofs = 0;
 			int ysize = 4;
-			foreach (LPanel lp in Controls)
-			{
+			foreach (LPanel lp in Controls) {
 				ysize += lp.Height - 1;
 			}
-			if (ysize > Height)
-				w -= SystemInformation.VerticalScrollBarWidth - 2;
-			for (int i = 0; i < count; i++)
-			{
+
+            if (ysize > Height) {
+                w -= SystemInformation.VerticalScrollBarWidth - 2;
+            }
+
+            for( int i = 0; i < count; i++ ) {
 				LPanel lp = (LPanel)Controls[i];
 				lp.Size = new Size(w, lp.Size.Height);
 				lp.Location = new Point(2, yofs);
 				yofs += lp.Size.Height - 1;
-				if (ysize > Height)
-					lp.AdjustForScroll();
-
+                
+                if (ysize > Height) {
+                    lp.AdjustForScroll();
+                }
 			}
 		}
 

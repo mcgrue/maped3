@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
@@ -45,7 +46,7 @@ namespace winmaped2
 		private System.Windows.Forms.MenuItem miNewMap;
 		private System.Windows.Forms.MenuItem miFile;
 		private System.Windows.Forms.MenuItem mruSeparator;
-		public ArrayList lwLayers = new ArrayList();
+		public List<LPanel> lwLayers = new List<LPanel>();
 		private System.Windows.Forms.MenuItem miSave;
 		private System.Windows.Forms.MenuItem miSaveAs;
 		private System.Windows.Forms.MenuItem misSave;
@@ -154,6 +155,30 @@ namespace winmaped2
 		public MenuItem miViewNotes;
 		private CollapsiblePanel layerPanel;
 
+        public int isNumericPressed(Keys keyData) {
+            if (keyData == (Keys.D1)) return 0;
+            if (keyData == (Keys.D2)) return 1;
+            if (keyData == (Keys.D3)) return 2;
+            if (keyData == (Keys.D4)) return 3;
+            if (keyData == (Keys.D5)) return 4;
+            if (keyData == (Keys.D6)) return 5;
+            if (keyData == (Keys.D7)) return 6;
+            if (keyData == (Keys.D8)) return 7;
+            if (keyData == (Keys.D9)) return 8;
+
+            return -1;
+        }
+
+        public LPanel getTileLayerForInt( int i, List<LPanel> list ) {
+            
+            foreach (var lp in list) {
+                if (lp.LayerRef.ID == i) {
+                    return lp;
+                }
+            }
+
+            return null;
+        }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
@@ -175,6 +200,18 @@ namespace winmaped2
                 Global.toolPalette.ChangeTool(new Guid("{29B9855E-E0F7-4b30-A9B0-1C2A28EDBB60}"));
                 return true;
             }
+
+            int numPressed = isNumericPressed(keyData);
+            if ( numPressed > -1 ) {
+                LPanel lp = getTileLayerForInt( numPressed, lwLayers );
+
+                if (lp != null && lp.LayerRef.type == LayerType.Tile ) {
+                    lp.SelectForWrite();
+                    Global.ForceRedraws();
+                    lp.Invalidate();
+                }
+            }
+
 
             /*
             if (keyData == (Keys.A))
@@ -289,8 +326,7 @@ namespace winmaped2
 			Global.TileViewerB = TileViewB;
 			Global.layerTool = lPanel;
 
-			if (Global.VspViewer != null)
-			{
+			if (Global.VspViewer != null) {
 				Global.VspViewer.CalculateScrollValues();
 			}
 
@@ -1228,9 +1264,8 @@ namespace winmaped2
 			this.radioButton2.Name = "radioButton2";
 			this.radioButton2.Size = new System.Drawing.Size(32, 32);
 			this.radioButton2.TabIndex = 1;
-			// 
-			// radioButton1
-			// 
+
+            // radioButton1
 			this.radioButton1.Appearance = System.Windows.Forms.Appearance.Button;
 			this.radioButton1.Image = ((System.Drawing.Image)(resources.GetObject("radioButton1.Image")));
 			this.radioButton1.Location = new System.Drawing.Point(4, 8);
@@ -1238,18 +1273,16 @@ namespace winmaped2
 			this.radioButton1.Size = new System.Drawing.Size(32, 32);
 			this.radioButton1.TabIndex = 0;
 			this.radioButton1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
+			
 			// radioButton4
-			// 
 			this.radioButton4.Appearance = System.Windows.Forms.Appearance.Button;
 			this.radioButton4.Image = ((System.Drawing.Image)(resources.GetObject("radioButton4.Image")));
 			this.radioButton4.Location = new System.Drawing.Point(68, 8);
 			this.radioButton4.Name = "radioButton4";
 			this.radioButton4.Size = new System.Drawing.Size(32, 32);
 			this.radioButton4.TabIndex = 3;
-			// 
-			// layerPanel
-			// 
+
+            // layerPanel
 			this.layerPanel.CanLargeify = false;
 			this.layerPanel.Controls.Add(this.lPanel);
 			this.layerPanel.Controls.Add(this.panel4);
@@ -1259,9 +1292,8 @@ namespace winmaped2
 			this.layerPanel.Size = new System.Drawing.Size(341, 186);
 			this.layerPanel.TabIndex = 1;
 			this.layerPanel.Title = "Layers";
-			// 
-			// lPanel
-			// 
+
+            // lPanel
 			this.lPanel.AutoScroll = true;
 			this.lPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.lPanel.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -1270,9 +1302,8 @@ namespace winmaped2
 			this.lPanel.Size = new System.Drawing.Size(341, 138);
 			this.lPanel.TabIndex = 0;
 			this.lPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.lPanel_Paint);
-			// 
+			
 			// panel4
-			// 
 			this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.panel4.Controls.Add(this.l_rstring);
 			this.panel4.Controls.Add(this.b_layeradd);

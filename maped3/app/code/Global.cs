@@ -285,7 +285,10 @@ namespace winmaped2 {
             Global.layerTool.Invalidate();
             MiniMap.Invalidate();
             MainMapController.Invalidate(true);
-            if (mainWindow != null) mainWindow.ui_update(false);
+
+            if (mainWindow != null) {
+                mainWindow.ui_update(false);
+            }
         }
         static Point _MapCursorLocation;
         public static Point MapCursorLocation {
